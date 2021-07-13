@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import Box from "../src/components/Box";
 import MainGrid from "../src/components/MainGrid";
@@ -17,6 +18,7 @@ function ProfileSidebar({ githubUser }) {
 
 export default function Home() {
   const githubUser = "ccarneiro";
+  const [followers, setFollowers] = useState([]);
   const pessoasFavoritas = [
     "juunegreiros",
     "omariosouto",
@@ -25,6 +27,17 @@ export default function Home() {
     "marcobrunodev",
     "felipefialho",
   ];
+
+  useEffect(() => {
+    fetchFollowers();
+  }, []);
+
+  async function fetchFollowers() {
+    const response = await fetch(
+      `https://api.github.com/users/${githubUser}/followers`
+    ).then((res) => res.json());
+    setFollowers(response.map((user) => user.login));
+  }
 
   return (
     <>
@@ -36,7 +49,7 @@ export default function Home() {
         <div className="welcomeArea" style={{ gridArea: "welcomeArea" }}>
           <Box>
             <h1 className="title">Bem vindo(a)</h1>
-            <OrkutNostalgicIconSet />
+            <OrkutNostalgicIconSet confiavel={3} legal={3} sexy={3} />
           </Box>
         </div>
         <div
@@ -48,9 +61,9 @@ export default function Home() {
               Pessoas da comunidade ({pessoasFavoritas.length})
             </h2>
             <ul>
-              {pessoasFavoritas.map((item) => (
-                <li>
-                  <a href={`/users/${item}`} key={item}>
+              {followers.map((item) => (
+                <li key={item}>
+                  <a href={`/users/${item}`}>
                     <img src={`https://github.com/${item}.png`} />
                     <span>{item}</span>
                   </a>
