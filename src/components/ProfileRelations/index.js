@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import Box from "../Box";
+import styled from 'styled-components';
+import Box from '../Box';
 
 export const ProfileRelationsBoxWrapper = styled(Box)`
   ul {
@@ -38,7 +38,7 @@ export const ProfileRelationsBoxWrapper = styled(Box)`
       -webkit-box-orient: vertical;
     }
     &:after {
-      content: "";
+      content: '';
       display: block;
       position: absolute;
       top: 0;
@@ -50,3 +50,23 @@ export const ProfileRelationsBoxWrapper = styled(Box)`
     }
   }
 `;
+
+export const ProfileRelations = ({ relations, title }) => {
+  return (
+    <ProfileRelationsBoxWrapper>
+      <h2 className="smallTitle">
+        {title} ({relations.length})
+      </h2>
+      <ul>
+        {relations.slice(0, 6).map((item) => (
+          <li key={item.id}>
+            <a href={item.url}>
+              <img src={item.image} />
+              <span>{item.title}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </ProfileRelationsBoxWrapper>
+  );
+};

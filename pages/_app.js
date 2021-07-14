@@ -1,5 +1,5 @@
-import { createGlobalStyle, ThemeProvider } from "styled-components";
-import { AlurakutStyles } from "../src/lib/AluraCommons";
+import { createGlobalStyle, ThemeProvider } from 'styled-components';
+import { AlurakutStyles } from '../src/lib/AluraCommons';
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -33,7 +33,7 @@ const GlobalStyle = createGlobalStyle`
 
 const theme = {
   colors: {
-    primary: "#0070f3",
+    primary: '#0070f3',
   },
 };
 
