@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import Box from '../src/components/Box';
 import MainGrid from '../src/components/MainGrid';
 import {
-  ProfileRelations,
+  ProfileRelationsBox,
   ProfileRelationsBoxWrapper,
 } from '../src/components/ProfileRelations';
 import {
@@ -33,6 +33,7 @@ function ProfileSidebar({ githubUser }) {
 
 export default function Home() {
   const githubUser = 'ccarneiro';
+  const [friends, setFriends] = useState([]);
   const [followers, setFollowers] = useState([]);
   const [communities, setCommunities] = useState([
     {
@@ -54,6 +55,7 @@ export default function Home() {
 
   useEffect(() => {
     fetchFollowers();
+    fetchFriends();
   }, []);
 
   async function fetchFollowers() {
@@ -68,6 +70,16 @@ export default function Home() {
         url: user.url,
       }))
     );
+  }
+
+  async function fetchFriends() {
+    const myFriends = pessoasFavoritas.map((name) => ({
+      id: name,
+      title: name,
+      image: `https://github.com/${name}.png`,
+      url: `https://github.com/${name}`,
+    }));
+    setFriends(myFriends);
   }
 
   function handleCriaComunidade(e) {
@@ -123,12 +135,9 @@ export default function Home() {
           className="profileRelationsArea"
           style={{ gridArea: 'profileRelationsArea' }}
         >
-          <Box>
-            <ProfileRelations title="Seguindo" relations={followers} />
-          </Box>
-          <Box>
-            <ProfileRelations title="Comunidades" relations={communities} />
-          </Box>
+          <ProfileRelationsBox title="Seguindo" items={followers} />
+          <ProfileRelationsBox title="Amigos" items={friends} />
+          <ProfileRelationsBox title="Comunidades" items={communities} />
         </div>
       </MainGrid>
     </>

@@ -51,14 +51,14 @@ export const ProfileRelationsBoxWrapper = styled(Box)`
   }
 `;
 
-export const ProfileRelations = ({ relations, title }) => {
+export const ProfileRelationsBox = ({ items, title }) => {
   return (
     <ProfileRelationsBoxWrapper>
       <h2 className="smallTitle">
-        {title} ({relations.length})
+        {title} ({items.length})
       </h2>
       <ul>
-        {relations.slice(0, 6).map((item) => (
+        {items.slice(0, 6).map((item) => (
           <li key={item.id}>
             <a href={item.url}>
               <img src={item.image} />
