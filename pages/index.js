@@ -31,7 +31,7 @@ function ProfileSidebar({ githubUser }) {
   );
 }
 
-export default function Home() {
+export default function Home({ token }) {
   const githubUser = 'ccarneiro';
   const [friends, setFriends] = useState([]);
   const [followers, setFollowers] = useState([]);
@@ -56,6 +56,7 @@ export default function Home() {
   useEffect(() => {
     fetchFollowers();
     fetchFriends();
+    fetchCommunities();
   }, []);
 
   async function fetchFollowers() {
@@ -82,18 +83,64 @@ export default function Home() {
     setFriends(myFriends);
   }
 
-  function handleCriaComunidade(e) {
+  async function fetchCommunities() {
+    /*
+    const data = await fetch('https://graphql.datocms.com/', {
+      method: 'POST',
+      headers: {
+        Authorization: token,
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      body: JSON.stringify({
+        query: `query {
+          allCommunities {
+            id
+            title
+            imageUrl
+            creatorSlug
+          }
+
+          _allCommunitiesMeta {
+            count
+          }
+        }`,
+      }),
+    }).then((response) => response.json()); */
+    // console.log(data.data.allCommunities);
+    const data = await fetch('/api/comunidades').then((response) =>
+      response.json()
+    );
+    const communitiesData = data.map((community) => ({
+      id: community.id,
+      title: community.title,
+      image: community.imageUrl,
+      url: `/communities/${community.id}`,
+      creatorSlug: community.creatorSlug,
+    }));
+    setCommunities(communitiesData);
+  }
+
+  async function handleCriaComunidade(e) {
     e.preventDefault();
     const formData = new FormData(e.target);
     const community = {
-      id: new Date().toISOString(),
       title: formData.get('title'),
       image:
         formData.get('image') ||
         `https://picsum.photos/200/300?${new Date().getTime()}`,
       url: '#',
+      creatorSlug: githubUser,
     };
-    setCommunities([...communities, community]);
+    const communitySaved = await fetch('/api/comunidades', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      body: JSON.stringify(community),
+    }).then((res) => res.json());
+    setCommunities([...communities, communitySaved]);
   }
 
   return (
@@ -142,4 +189,8 @@ export default function Home() {
       </MainGrid>
     </>
   );
+}
+
+export async function getStaticProps() {
+  return { props: { token: process.env.DATOCMS_TOKEN_READONLY } };
 }
