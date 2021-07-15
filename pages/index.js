@@ -31,7 +31,7 @@ function ProfileSidebar({ githubUser }) {
   );
 }
 
-export default function Home({ token }) {
+export default function Home() {
   const githubUser = 'ccarneiro';
   const [friends, setFriends] = useState([]);
   const [followers, setFollowers] = useState([]);
@@ -191,6 +191,6 @@ export default function Home({ token }) {
   );
 }
 
-export async function getStaticProps() {
-  return { props: { token: process.env.DATOCMS_TOKEN_READONLY } };
-}
+// export async function getStaticProps() {
+//   return { props: { token: process.env.DATOCMS_TOKEN_READONLY } };
+// }
