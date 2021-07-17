@@ -9,7 +9,7 @@ export default async function requisicao(request, response) {
     const record = await client.items.create({
       itemType: '968380', // model ID
       title: request.body.title,
-      imageUrl: request.body.url,
+      imageUrl: request.body.imageUrl,
       creatorSlug: request.body.creatorSlug,
     });
     response.json({

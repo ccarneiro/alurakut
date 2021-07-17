@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import nookies from 'nookies';
+import jwt from 'jsonwebtoken';
+
 import Box from '../src/components/Box';
 import MainGrid from '../src/components/MainGrid';
 import {
@@ -31,8 +34,8 @@ function ProfileSidebar({ githubUser }) {
   );
 }
 
-export default function Home() {
-  const githubUser = 'ccarneiro';
+export default function Home({ githubUser }) {
+  // const githubUser = 'ccarneiro';
   const [friends, setFriends] = useState([]);
   const [followers, setFollowers] = useState([]);
   const [communities, setCommunities] = useState([
@@ -194,3 +197,36 @@ export default function Home() {
 // export async function getStaticProps() {
 //   return { props: { token: process.env.DATOCMS_TOKEN_READONLY } };
 // }
+
+export async function getServerSideProps(context) {
+  const cookies = nookies.get(context);
+  const token = cookies.USER_TOKEN;
+
+  const { isAuthenticated } = await fetch(
+    'https://alurakut.vercel.app/api/auth',
+    {
+      headers: {
+        Authorization: token,
+        permanent: false,
+      },
+    }
+  ).then((res) => res.json());
+
+  console.log('isAuthenticated', isAuthenticated);
+
+  if (!isAuthenticated) {
+    return {
+      redirect: {
+        destination: '/login',
+      },
+    };
+  }
+
+  const { githubUser } = jwt.decode(token);
+
+  return {
+    props: {
+      githubUser,
+    }, // will be passed to the page component as props
+  };
+}
